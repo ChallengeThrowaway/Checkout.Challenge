@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PaymentGateway.Api.Models;
 
 namespace PaymentGateway.Api.Controllers
 {
@@ -7,7 +8,7 @@ namespace PaymentGateway.Api.Controllers
     public class PaymentController : ControllerBase
     {
         [HttpPost]
-        public ActionResult CreatePayment() 
+        public ActionResult CreatePayment(PaymentRequest payment) 
         {
             return Ok();
         }
