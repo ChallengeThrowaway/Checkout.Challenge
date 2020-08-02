@@ -7,6 +7,11 @@ namespace PaymentGateway.Data.Entities
 {
     public class Payment
     {
+        public Payment() 
+        {
+            PaymentStatuses = new List<PaymentStatus>();
+        }
+
         [Key]
         public Guid PaymentId { get; set; }
         public decimal Amount { get; set; }

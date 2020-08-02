@@ -1,13 +1,12 @@
-﻿using PaymentGateway.Data.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using PaymentGateway.Data.Entities;
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 
 namespace PaymentGateway.Data.Repositories
 {
     public class PaymentRepository : IPaymentRepository
     {
-
         private readonly PaymentGatewayContext _context; 
         
         public PaymentRepository(PaymentGatewayContext context)
@@ -19,6 +18,13 @@ namespace PaymentGateway.Data.Repositories
         {
             _context.Add(payment);
             _context.SaveChanges();
+        }
+
+        public Payment FindByPaymentId(Guid paymentGuid)
+        {
+            return _context.Payments
+                .Include(p => p.PaymentStatuses)
+                .FirstOrDefault();
         }
 
     }

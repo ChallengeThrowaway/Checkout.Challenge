@@ -11,6 +11,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using PaymentGateway.Data;
+using PaymentGateway.Data.Repositories;
+using PaymentGateway.Service.Services;
 
 namespace PaymentGateway.Api
 {
@@ -27,8 +29,12 @@ namespace PaymentGateway.Api
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
             services.AddDbContext<PaymentGatewayContext>(options => options.UseSqlServer(Configuration.GetConnectionString("GatewayConnectionString")));
+
+            services.AddTransient<IPaymentRepository, PaymentRepository>();
+            services.AddTransient<IPaymentService, PaymentService>();
+
+            services.AddControllers();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

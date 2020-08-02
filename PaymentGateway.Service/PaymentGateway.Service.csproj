@@ -7,7 +7,10 @@
   <ItemGroup>
     <Folder Include="Clients\" />
     <Folder Include="Validators\" />
-    <Folder Include="Services\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PaymentGateway.Data\PaymentGateway.Data.csproj" />
   </ItemGroup>
 
 </Project>
