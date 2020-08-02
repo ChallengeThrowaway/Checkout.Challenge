@@ -25,6 +25,7 @@ namespace PaymentGateway.Api
         {
             services.AddHealthChecks();
 
+            //TODO: Find a way to secure this
             services.AddDbContext<PaymentGatewayContext>(options => options.UseSqlServer(Configuration.GetConnectionString("GatewayConnectionString")));
 
             services.AddTransient<IPaymentRepository, PaymentRepository>();

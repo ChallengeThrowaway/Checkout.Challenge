@@ -2,6 +2,7 @@
 using PaymentGateway.Api.Models;
 using PaymentGateway.Core.Models;
 using PaymentGateway.Service.Services;
+using System.Threading.Tasks;
 
 namespace PaymentGateway.Api.Controllers
 {
@@ -35,9 +36,9 @@ namespace PaymentGateway.Api.Controllers
 
         [HttpGet]
         [Route("{Id}")]
-        public ActionResult<PaymentResponse> GetPayment(string id)
+        public async Task<ActionResult<PaymentDetails>> GetPayment(string id)
         {
-            var payment = _paymentService.GetPayment(new System.Guid(id));
+            var payment = await _paymentService.GetPayment(new System.Guid(id));
             return Ok(payment);
         }
     }

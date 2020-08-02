@@ -1,9 +1,9 @@
-﻿using PaymentGateway.Core.Models;
+﻿using PaymentGateway.Core.Enums;
+using PaymentGateway.Core.Models;
 using PaymentGateway.Data.Entities;
 using PaymentGateway.Data.Repositories;
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Threading.Tasks;
 
 namespace PaymentGateway.Service.Services
 {
@@ -18,32 +18,33 @@ namespace PaymentGateway.Service.Services
 
         public void ProcessPaymentRequest(PaymentRequest paymentRequest)
         {
-            var cardDetails = new Data.Entities.CardDetails
+            var cardDetails = new CardDetails
             {
                 CardholderName = paymentRequest.CardholderName,
                 CardNumber = paymentRequest.CardNumber,
                 Ccv = paymentRequest.Ccv
             };
 
-            var payment = new Data.Entities.Payment
+            var payment = new Payment
             {
                 Amount = paymentRequest.Amount,
                 CardDetails = cardDetails,
-                CurrencyIsoAlpha3 = "GBP"
+                CurrencyIsoAlpha3 = paymentRequest.CurrencyIsoAlpha3
             };
 
-            payment.PaymentStatuses.Add(new Data.Entities.PaymentStatus
+            payment.PaymentStatuses.Add(new PaymentStatus
             {
-                Status = Core.Enums.PaymentStatuses.PendingSubmission,
+                Status = PaymentStatuses.PendingSubmission,
                 StatusDateTime = DateTime.UtcNow
             });
+
 
             _paymentRepository.Add(payment);
 
             //TODO Send to acquiring bank using client
         }
 
-        public Data.Entities.Payment GetPayment(Guid paymentGuid) 
+        public Task<Payment> GetPayment(Guid paymentGuid)
         {
             return _paymentRepository.FindByPaymentId(paymentGuid);
         }

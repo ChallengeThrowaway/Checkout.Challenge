@@ -2,6 +2,7 @@
 using PaymentGateway.Data.Entities;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace PaymentGateway.Data.Repositories
 {
@@ -17,14 +18,14 @@ namespace PaymentGateway.Data.Repositories
         public void Add(Payment payment) 
         {
             _context.Add(payment);
-            _context.SaveChanges();
+            _context.SaveChangesAsync();
         }
 
-        public Payment FindByPaymentId(Guid paymentGuid)
+        public Task<Payment> FindByPaymentId(Guid paymentGuid)
         {
             return _context.Payments
                 .Include(p => p.PaymentStatuses)
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
         }
 
     }

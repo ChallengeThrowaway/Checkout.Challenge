@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace PaymentGateway.Api.Models
 {
-    public class PaymentResponse
+    public class PaymentDetails
     {
         public decimal Amount { get; set; }
         public string CurrencyIsoAlpha3 { get; set; }
