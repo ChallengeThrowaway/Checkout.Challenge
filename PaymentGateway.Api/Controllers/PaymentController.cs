@@ -9,6 +9,7 @@ namespace PaymentGateway.Api.Controllers
     [ApiController]
     public class PaymentController : ControllerBase
     {
+        //TODO: Add authentication, use authentication to link merchant to a payment so they can reconcile at a later date
         private readonly IPaymentService _paymentService;
 
         public PaymentController(IPaymentService paymentService)
@@ -34,7 +35,7 @@ namespace PaymentGateway.Api.Controllers
 
         [HttpGet]
         [Route("{Id}")]
-        public ActionResult<Payment> GetPayment(string id)
+        public ActionResult<PaymentResponse> GetPayment(string id)
         {
             var payment = _paymentService.GetPayment(new System.Guid(id));
             return Ok(payment);

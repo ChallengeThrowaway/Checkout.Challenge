@@ -1,13 +1,12 @@
 ﻿using PaymentGateway.Core.Models;
+using PaymentGateway.Data.Entities;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace PaymentGateway.Service.Services
 {
     public interface IPaymentService
     {
         void ProcessPaymentRequest(PaymentRequest paymentRequest);
-        public Data.Entities.Payment GetPayment(Guid paymentGuid);
+        public Payment GetPayment(Guid paymentGuid);
     }
 }
