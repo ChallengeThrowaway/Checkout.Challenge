@@ -2,6 +2,7 @@
 using PaymentGateway.Core.Models;
 using PaymentGateway.Data.Entities;
 using PaymentGateway.Data.Repositories;
+using PaymentGateway.Service.Validators;
 using System;
 using System.Threading.Tasks;
 
@@ -10,14 +11,20 @@ namespace PaymentGateway.Service.Services
     public class PaymentService : IPaymentService
     {
         private readonly IPaymentRepository _paymentRepository;
+        private readonly IValidator<PaymentRequest> _paymentRequestValidator;
 
-        public PaymentService(IPaymentRepository paymentRepository)
+        public PaymentService(
+            IPaymentRepository paymentRepository,
+            IValidator<PaymentRequest> paymentRequestValidator)
         {
             _paymentRepository = paymentRepository;
+            _paymentRequestValidator = paymentRequestValidator;
         }
 
         public void ProcessPaymentRequest(PaymentRequest paymentRequest)
         {
+            var validationErrors = _paymentRequestValidator.Validate(paymentRequest);
+
             var cardDetails = new CardDetails
             {
                 CardholderName = paymentRequest.CardholderName,
@@ -34,10 +41,9 @@ namespace PaymentGateway.Service.Services
 
             payment.PaymentStatuses.Add(new PaymentStatus
             {
-                Status = PaymentStatuses.PendingSubmission,
+                Status = validationErrors.Count > 0 ? PaymentStatuses.ValidationError : PaymentStatuses.PendingSubmission,
                 StatusDateTime = DateTime.UtcNow
             });
-
 
             _paymentRepository.Add(payment);
 
@@ -46,6 +52,7 @@ namespace PaymentGateway.Service.Services
 
         public Task<Payment> GetPayment(Guid paymentGuid)
         {
+            //TODO Mask card information
             return _paymentRepository.FindByPaymentId(paymentGuid);
         }
     }

@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PaymentGateway.Api.Models;
-using PaymentGateway.Core.Models;
 using PaymentGateway.Service.Services;
 using System.Threading.Tasks;
 
@@ -19,7 +18,7 @@ namespace PaymentGateway.Api.Controllers
         }
 
         [HttpPost]
-        public ActionResult CreatePayment(Models.PaymentRequest payment)
+        public ActionResult CreatePayment(PaymentRequest payment)
         {
             var paymentRequest = new Core.Models.PaymentRequest
             {

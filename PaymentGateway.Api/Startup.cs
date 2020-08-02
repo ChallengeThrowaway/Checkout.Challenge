@@ -4,9 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using PaymentGateway.Core.Models;
 using PaymentGateway.Data;
 using PaymentGateway.Data.Repositories;
 using PaymentGateway.Service.Services;
+using PaymentGateway.Service.Validators;
 
 namespace PaymentGateway.Api
 {
@@ -30,6 +32,8 @@ namespace PaymentGateway.Api
 
             services.AddTransient<IPaymentRepository, PaymentRepository>();
             services.AddTransient<IPaymentService, PaymentService>();
+
+            services.AddSingleton<IValidator<PaymentRequest>, PaymentRequestValidator>();
 
             services.AddControllers();
         }
