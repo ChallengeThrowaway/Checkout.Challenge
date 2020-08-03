@@ -15,7 +15,7 @@ namespace AcquiringBank.Mock.Controllers
             var response =  new PaymentResponse
             {
                 BankId = Guid.NewGuid(),
-                PaymentStatus = "Success",
+                PaymentStatus = "Submitted",
                 StatusDateTime = DateTime.UtcNow
             };
 

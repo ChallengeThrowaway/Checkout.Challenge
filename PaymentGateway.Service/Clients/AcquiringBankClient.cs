@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using PaymentGateway.Core.Configuration;
 using PaymentGateway.Core.Enums;
 using PaymentGateway.Core.Models;
@@ -17,11 +18,11 @@ namespace PaymentGateway.Service.Clients
         private readonly ILogger<IAcquiringBankClient> _logger;
 
         public AcquiringBankClient(
-            AcquiringBankSettings acquiringBankSettings,
+            IOptions<AcquiringBankSettings> acquiringBankSettings,
             HttpClient httpClient,
             ILogger<AcquiringBankClient> logger) 
         {
-            _acquiringBankSettings = acquiringBankSettings;
+            _acquiringBankSettings = acquiringBankSettings.Value;
             _httpClient = httpClient;
             _logger = logger;
         }
@@ -32,20 +33,29 @@ namespace PaymentGateway.Service.Clients
 
             try
             {
-                var data = JsonSerializer.Serialize(paymentRequest);
+                var data =  JsonSerializer.Serialize(paymentRequest);
                 var content = new StringContent(data.ToString(), Encoding.UTF8, "application/json");
-                response = await _httpClient.PostAsync(_acquiringBankSettings.BaseUrl, content);
+                response = await _httpClient.PostAsync($"{_acquiringBankSettings.BaseUrl}/api/v1/payments", content);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error submitting payment request to acquiring bank");
-
                 return GenerateErrorDetails();
             }
 
-            var responseContent = await response.Content.ReadAsByteArrayAsync();
+            var responseContent = await response.Content.ReadAsStringAsync();
+            AcquiringBankResponse responseObject;
 
-            var responseObject = JsonSerializer.Deserialize<AcquiringBankResponse>(responseContent);
+            try 
+            { 
+                responseObject = JsonSerializer.Deserialize<AcquiringBankResponse>(responseContent);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deserializing response");
+                return GenerateErrorDetails();
+
+            }
 
             return GenerateDetails(responseObject);
         }

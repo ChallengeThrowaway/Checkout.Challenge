@@ -40,6 +40,7 @@ namespace PaymentGateway.Api
 
             //TODO: Find a way to secure this
             services.AddDbContext<PaymentGatewayContext>(options => options.UseSqlServer(Configuration.GetConnectionString("GatewayConnectionString")));
+            services.Configure<AcquiringBankSettings>(options => Configuration.GetSection("AcquiringBankSettings").Bind(options));
 
             services.AddTransient<IPaymentRepository, PaymentRepository>();
             services.AddTransient<IPaymentService, PaymentService>();
@@ -48,13 +49,11 @@ namespace PaymentGateway.Api
             services.AddTransient<IMerchantRepository, MerchantRepository>();
 
             services.AddSingleton<IValidator<PaymentRequest>, PaymentRequestValidator>();
-            services.AddSingleton<IAcquiringBankClient, AcquiringBankClient>();
-
-            services.Configure<AcquiringBankSettings>(Configuration.GetSection("AcquiringBankSettings"));
+            services.AddHttpClient<IAcquiringBankClient, AcquiringBankClient>();
 
             services.AddAutoMapper(typeof(Startup));
             services.AddControllers();
-            services.AddHttpClient();
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
