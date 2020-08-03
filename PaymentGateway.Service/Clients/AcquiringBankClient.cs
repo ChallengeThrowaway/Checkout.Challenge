@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
@@ -89,17 +90,17 @@ namespace PaymentGateway.Service.Clients
                 return PaymentStatuses.SubmissionError;
             }
 
-            if (response.PaymentStatus.Equals("ValidationError"))
+            if (response.PaymentStatus.Equals("ValidationError", StringComparison.InvariantCultureIgnoreCase))
             {
                 return PaymentStatuses.BankValidationError;
             }
 
-            if (response.PaymentStatus.Equals("SubmissionError"))
+            if (response.PaymentStatus.Equals("SubmissionError", StringComparison.InvariantCultureIgnoreCase))
             {
                 return PaymentStatuses.SubmissionError;
             }
 
-            if (response.PaymentStatus.Equals("Submitted"))
+            if (response.PaymentStatus.Equals("Submitted", StringComparison.InvariantCultureIgnoreCase))
             {
                 return PaymentStatuses.Submitted;
             }
