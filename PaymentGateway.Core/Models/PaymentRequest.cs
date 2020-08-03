@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace PaymentGateway.Core.Models
 {
@@ -11,5 +9,6 @@ namespace PaymentGateway.Core.Models
         public string CardNumber { get; set; }
         public string Cvv { get; set; }
         public string CardholderName { get; set; }
+        public Guid MerchantId { get; set; }
     }
 }

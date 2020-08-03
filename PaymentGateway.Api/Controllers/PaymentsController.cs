@@ -1,9 +1,13 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PaymentGateway.Api.Models;
 using PaymentGateway.Service.Services;
+using System.Security.Claims;
 using System.Threading.Tasks;
+
 
 namespace PaymentGateway.Api.Controllers
 {
@@ -27,7 +31,10 @@ namespace PaymentGateway.Api.Controllers
         [Authorize]
         public async Task<ActionResult> CreatePayment(PaymentRequest payment)
         {
+            var merchantId = User.Identity.Name;
+
             var paymentRequest = _autoMapper.Map<Core.Models.PaymentRequest>(payment);
+            paymentRequest.MerchantId = new Guid(merchantId);
 
             await _paymentService.ProcessPaymentRequest(paymentRequest);
             return Ok();

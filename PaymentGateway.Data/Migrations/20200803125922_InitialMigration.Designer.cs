@@ -10,7 +10,7 @@ using PaymentGateway.Data;
 namespace PaymentGateway.Data.Migrations
 {
     [DbContext(typeof(PaymentGatewayContext))]
-    [Migration("20200803013634_InitialMigration")]
+    [Migration("20200803125922_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -20,6 +20,31 @@ namespace PaymentGateway.Data.Migrations
                 .HasAnnotation("ProductVersion", "3.1.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("PaymentGateway.Data.Entities.ApiKey", b =>
+                {
+                    b.Property<Guid>("ApiKeyId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Key")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("OwnerMerchantId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("ValidFrom")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset>("ValidUntil")
+                        .HasColumnType("datetimeoffset");
+
+                    b.HasKey("ApiKeyId");
+
+                    b.HasIndex("OwnerMerchantId");
+
+                    b.ToTable("ApiKeys");
+                });
 
             modelBuilder.Entity("PaymentGateway.Data.Entities.CardDetails", b =>
                 {
@@ -33,12 +58,29 @@ namespace PaymentGateway.Data.Migrations
                     b.Property<string>("CardholderName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Ccv")
+                    b.Property<string>("Cvv")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("CardDetailsId");
 
                     b.ToTable("CardDetails");
+                });
+
+            modelBuilder.Entity("PaymentGateway.Data.Entities.Merchant", b =>
+                {
+                    b.Property<Guid>("MerchantId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("CreatedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("MerchantName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("MerchantId");
+
+                    b.ToTable("Merchants");
                 });
 
             modelBuilder.Entity("PaymentGateway.Data.Entities.Payment", b =>
@@ -59,9 +101,14 @@ namespace PaymentGateway.Data.Migrations
                     b.Property<string>("CurrencyIsoAlpha3")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid?>("MerchantId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("PaymentId");
 
                     b.HasIndex("CardDetailsId");
+
+                    b.HasIndex("MerchantId");
 
                     b.ToTable("Payments");
                 });
@@ -88,11 +135,22 @@ namespace PaymentGateway.Data.Migrations
                     b.ToTable("PaymentStatuses");
                 });
 
+            modelBuilder.Entity("PaymentGateway.Data.Entities.ApiKey", b =>
+                {
+                    b.HasOne("PaymentGateway.Data.Entities.Merchant", "Owner")
+                        .WithMany()
+                        .HasForeignKey("OwnerMerchantId");
+                });
+
             modelBuilder.Entity("PaymentGateway.Data.Entities.Payment", b =>
                 {
                     b.HasOne("PaymentGateway.Data.Entities.CardDetails", "CardDetails")
                         .WithMany()
                         .HasForeignKey("CardDetailsId");
+
+                    b.HasOne("PaymentGateway.Data.Entities.Merchant", "Merchant")
+                        .WithMany()
+                        .HasForeignKey("MerchantId");
                 });
 
             modelBuilder.Entity("PaymentGateway.Data.Entities.PaymentStatus", b =>

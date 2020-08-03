@@ -43,6 +43,7 @@ namespace PaymentGateway.Api
             services.AddTransient<IPaymentService, PaymentService>();
 
             services.AddTransient<IApiKeyRepository, ApiKeyRepository>();
+            services.AddTransient<IMerchantRepository, MerchantRepository>();
 
             services.AddSingleton<IValidator<PaymentRequest>, PaymentRequestValidator>();
             services.AddSingleton<IAcquiringBankClient, AcquiringBankClient>();

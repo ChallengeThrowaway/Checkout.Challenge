@@ -20,5 +20,6 @@ namespace PaymentGateway.Data.Entities
         public CardDetails CardDetails { get; set; }
         public virtual ICollection<PaymentStatus> PaymentStatuses { get; set; }
         public Guid? BankId { get; set; }
+        public Merchant Merchant { get; set; }
     }
 }

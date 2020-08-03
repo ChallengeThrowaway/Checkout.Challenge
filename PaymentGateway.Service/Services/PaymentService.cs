@@ -13,17 +13,20 @@ namespace PaymentGateway.Service.Services
     public class PaymentService : IPaymentService
     {
         private readonly IPaymentRepository _paymentRepository;
+        private readonly IMerchantRepository _merchantRepository;
         private readonly IValidator<PaymentRequest> _paymentRequestValidator;
         private readonly IAcquiringBankClient _acquiringBankClient;
         private readonly IMapper _autoMapper;
 
         public PaymentService(
             IPaymentRepository paymentRepository,
+            IMerchantRepository merchantRepository,
             IValidator<PaymentRequest> paymentRequestValidator,
             IAcquiringBankClient acquiringBankClient,
             IMapper autoMapper)
         {
             _paymentRepository = paymentRepository;
+            _merchantRepository = merchantRepository;
             _paymentRequestValidator = paymentRequestValidator;
             _acquiringBankClient = acquiringBankClient;
             _autoMapper = autoMapper;
@@ -33,7 +36,11 @@ namespace PaymentGateway.Service.Services
         {
             var validationErrors = _paymentRequestValidator.Validate(paymentRequest);
 
+            var merchant = _merchantRepository.GetMerchantById(paymentRequest.MerchantId);
+
             var payment = _autoMapper.Map<Payment>(paymentRequest);
+
+            payment.Merchant = await merchant;
 
             payment.PaymentStatuses.Add(new PaymentStatus
             {

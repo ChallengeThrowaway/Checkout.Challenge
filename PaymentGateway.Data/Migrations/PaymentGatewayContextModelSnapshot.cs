@@ -23,8 +23,7 @@ namespace PaymentGateway.Data.Migrations
                 {
                     b.Property<Guid>("ApiKeyId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Key")
                         .HasColumnType("nvarchar(max)");
@@ -100,9 +99,14 @@ namespace PaymentGateway.Data.Migrations
                     b.Property<string>("CurrencyIsoAlpha3")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid?>("MerchantId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("PaymentId");
 
                     b.HasIndex("CardDetailsId");
+
+                    b.HasIndex("MerchantId");
 
                     b.ToTable("Payments");
                 });
@@ -141,6 +145,10 @@ namespace PaymentGateway.Data.Migrations
                     b.HasOne("PaymentGateway.Data.Entities.CardDetails", "CardDetails")
                         .WithMany()
                         .HasForeignKey("CardDetailsId");
+
+                    b.HasOne("PaymentGateway.Data.Entities.Merchant", "Merchant")
+                        .WithMany()
+                        .HasForeignKey("MerchantId");
                 });
 
             modelBuilder.Entity("PaymentGateway.Data.Entities.PaymentStatus", b =>
