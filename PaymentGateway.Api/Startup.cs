@@ -8,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 using PaymentGateway.Api.Authentication;
 using PaymentGateway.Api.Middleware;
 using PaymentGateway.Core.Configuration;
+using PaymentGateway.Core.Helpers;
 using PaymentGateway.Core.Models;
 using PaymentGateway.Data;
 using PaymentGateway.Data.Repositories;
@@ -45,6 +46,7 @@ namespace PaymentGateway.Api
             services.AddTransient<IPaymentService, PaymentService>();
             services.AddTransient<IApiKeyRepository, ApiKeyRepository>();
             services.AddTransient<IMerchantRepository, MerchantRepository>();
+            services.AddTransient<IDateTimeProvider, DateTimeProvider>();
 
             services.AddSingleton<IValidator<PaymentRequest>, PaymentRequestValidator>();
             services.AddHttpClient<IAcquiringBankClient, AcquiringBankClient>();

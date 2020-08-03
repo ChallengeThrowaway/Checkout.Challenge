@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using PaymentGateway.Core.Enums;
+using PaymentGateway.Core.Helpers;
 using PaymentGateway.Core.Models;
 using PaymentGateway.Data.Entities;
 using PaymentGateway.Data.Repositories;
@@ -20,23 +21,31 @@ namespace PaymentGateway.Service.Services
         private readonly IValidator<PaymentRequest> _paymentRequestValidator;
         private readonly IAcquiringBankClient _acquiringBankClient;
         private readonly IMapper _autoMapper;
+        private readonly IDateTimeProvider _dateTimeProvider;
 
         public PaymentService(
             IPaymentRepository paymentRepository,
             IMerchantRepository merchantRepository,
             IValidator<PaymentRequest> paymentRequestValidator,
             IAcquiringBankClient acquiringBankClient,
-            IMapper autoMapper)
+            IMapper autoMapper,
+            IDateTimeProvider dateTimeProvider)
         {
             _paymentRepository = paymentRepository;
             _merchantRepository = merchantRepository;
             _paymentRequestValidator = paymentRequestValidator;
             _acquiringBankClient = acquiringBankClient;
             _autoMapper = autoMapper;
+            _dateTimeProvider = dateTimeProvider;
         }
 
         public async Task<PaymentResponse> ProcessPaymentRequest(PaymentRequest paymentRequest)
         {
+            if (paymentRequest == null)
+            {
+                throw new ArgumentNullException("paymentRequest");
+            }
+
             var validationErrors = _paymentRequestValidator.Validate(paymentRequest);
 
             var merchant = _merchantRepository.GetMerchantById(paymentRequest.MerchantId);
@@ -53,7 +62,7 @@ namespace PaymentGateway.Service.Services
             payment.PaymentStatuses.Add(new PaymentStatus
             {
                 StatusKey = validationErrors.Any() ? PaymentStatuses.InternalValidationError : PaymentStatuses.PendingSubmission,
-                StatusDateTime = DateTime.UtcNow
+                StatusDateTime = _dateTimeProvider.UtcNow
             });
 
             payment = await _paymentRepository.Add(payment);
@@ -70,7 +79,7 @@ namespace PaymentGateway.Service.Services
                 payment.PaymentStatuses.Add(new PaymentStatus
                 {
                     StatusKey = PaymentStatuses.SubmissionError,
-                    StatusDateTime = DateTime.UtcNow
+                    StatusDateTime = _dateTimeProvider.UtcNow
                 });
 
                 await _paymentRepository.Update(payment);
