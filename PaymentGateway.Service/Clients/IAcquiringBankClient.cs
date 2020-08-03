@@ -8,6 +8,6 @@ namespace PaymentGateway.Service.Clients
 {
     public interface IAcquiringBankClient
     {
-        Task<PaymentResponse> SubmitPaymentToBank(PaymentRequest paymentRequest);
+        Task<AcquiringBankResponse> SubmitPaymentToBank(PaymentRequest paymentRequest);
     }
 }

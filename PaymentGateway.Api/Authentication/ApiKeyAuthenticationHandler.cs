@@ -41,7 +41,7 @@ namespace PaymentGateway.Api.Authentication
 
             var providedApiKey = apiKeyHeaderValues.FirstOrDefault();
 
-            if (apiKeyHeaderValues.Count == 0 || string.IsNullOrWhiteSpace(providedApiKey))
+            if (!apiKeyHeaderValues.Any() || string.IsNullOrWhiteSpace(providedApiKey))
             {
                 return AuthenticateResult.NoResult();
             }

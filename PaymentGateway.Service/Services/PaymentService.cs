@@ -6,6 +6,7 @@ using PaymentGateway.Data.Repositories;
 using PaymentGateway.Service.Clients;
 using PaymentGateway.Service.Validators;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace PaymentGateway.Service.Services
@@ -32,7 +33,7 @@ namespace PaymentGateway.Service.Services
             _autoMapper = autoMapper;
         }
 
-        public async Task ProcessPaymentRequest(PaymentRequest paymentRequest)
+        public async Task<PaymentResponse> ProcessPaymentRequest(PaymentRequest paymentRequest)
         {
             var validationErrors = _paymentRequestValidator.Validate(paymentRequest);
 
@@ -44,16 +45,20 @@ namespace PaymentGateway.Service.Services
 
             payment.PaymentStatuses.Add(new PaymentStatus
             {
-                StatusKey = validationErrors.Count > 0 ? PaymentStatuses.InternalValidationError : PaymentStatuses.PendingSubmission,
+                StatusKey = validationErrors.Any() ? PaymentStatuses.InternalValidationError : PaymentStatuses.PendingSubmission,
                 StatusDateTime = DateTime.UtcNow
             });
 
             payment = await _paymentRepository.Add(payment);
 
-            //TODO Need to return some sort of failure message here
-            if (validationErrors.Count > 0) 
+            if (validationErrors.Any()) 
             {
-                return;
+                return new PaymentResponse
+                {
+                    PaymentId = payment.PaymentId,
+                    PaymentStatus = payment.PaymentStatuses.OrderByDescending(d => d.StatusDateTime).FirstOrDefault().StatusKey,
+                    ValidationErrors = validationErrors
+                };
             }
 
             //TODO Send to acquiring bank using client
@@ -68,7 +73,12 @@ namespace PaymentGateway.Service.Services
 
                 await _paymentRepository.Update(payment);
 
-                return;
+                return new PaymentResponse
+                {
+                    PaymentId = payment.PaymentId,
+                    PaymentStatus = payment.PaymentStatuses.OrderByDescending(d => d.StatusDateTime).FirstOrDefault().StatusKey,
+                    ValidationErrors = validationErrors
+                }; 
             }
 
             payment.BankId = bankResponse.BankId;
@@ -78,10 +88,17 @@ namespace PaymentGateway.Service.Services
                 StatusDateTime = bankResponse.StatusDateTime
             });
 
-            await _paymentRepository.Update(payment);
+            payment = await _paymentRepository.Update(payment);
+
+            //TODO: Find a way to reduce code duplication
+            return new PaymentResponse
+            {
+                PaymentId = payment.PaymentId,
+                PaymentStatus = payment.PaymentStatuses.OrderByDescending(d => d.StatusDateTime).FirstOrDefault().StatusKey,
+                ValidationErrors = validationErrors
+            };
         }
 
-        //TODO: Only return payment if merchant who submitted payment is the one requesting it
         public async Task<Payment> GetMerchantPaymentById(Guid paymentId, Guid merchantId)
         {
             //TODO Mask card information

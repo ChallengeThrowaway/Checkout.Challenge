@@ -33,8 +33,17 @@ namespace PaymentGateway.Api.Controllers
             var paymentRequest = _autoMapper.Map<Core.Models.PaymentRequest>(payment);
             paymentRequest.MerchantId = new Guid(merchantId);
 
-            await _paymentService.ProcessPaymentRequest(paymentRequest);
-            return Ok();
+            var response = await _paymentService.ProcessPaymentRequest(paymentRequest);
+
+            //TODO Find a way to improve this
+            var paymentResponse = new PaymentResponse
+            {
+                PaymentId = response.PaymentId,
+                ValidationErrors = response.ValidationErrors,
+                PaymentStatus = response.PaymentStatus.ToString()
+            };
+
+            return Ok(paymentResponse);
         }
 
         [HttpGet]

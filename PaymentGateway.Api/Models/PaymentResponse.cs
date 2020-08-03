@@ -1,8 +1,7 @@
-﻿using PaymentGateway.Core.Enums;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
-namespace PaymentGateway.Core.Models
+namespace PaymentGateway.Api.Models
 {
     public class PaymentResponse
     {
@@ -12,7 +11,7 @@ namespace PaymentGateway.Core.Models
         }
 
         public Guid PaymentId { get; set; }
-        public PaymentStatuses PaymentStatus { get; set; }
+        public string PaymentStatus { get; set; }
         public List<string> ValidationErrors { get; set; }
     }
 }

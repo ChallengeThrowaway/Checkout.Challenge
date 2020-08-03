@@ -12,11 +12,11 @@ namespace PaymentGateway.Service.Clients
 
         public AcquiringBankClient() { }
 
-        public async Task<PaymentResponse> SubmitPaymentToBank(PaymentRequest paymentRequest)
+        public async Task<AcquiringBankResponse> SubmitPaymentToBank(PaymentRequest paymentRequest)
         {
             if (paymentRequest.Cvv == "666")
             {
-                return new PaymentResponse
+                return new AcquiringBankResponse
                 {
                     BankId = Guid.NewGuid(),
                     PaymentStatus = PaymentStatuses.SubmissionError,
@@ -26,7 +26,7 @@ namespace PaymentGateway.Service.Clients
 
             else 
             {
-                return new PaymentResponse
+                return new AcquiringBankResponse
                 {
                     BankId = Guid.NewGuid(),
                     PaymentStatus = PaymentStatuses.Submitted,
