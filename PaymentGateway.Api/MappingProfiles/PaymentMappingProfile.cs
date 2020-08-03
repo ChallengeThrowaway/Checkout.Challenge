@@ -11,6 +11,9 @@ namespace PaymentGateway.Api.MappingProfiles
             CreateMap<Models.PaymentRequest, PaymentRequest>();
             CreateMap<PaymentRequest, Models.PaymentRequest>();
 
+            CreateMap<Models.PaymentDetails, PaymentDetails>();
+            CreateMap<PaymentDetails, Models.PaymentDetails>();
+
             CreateMap<PaymentRequest, CardDetails>();
             CreateMap<PaymentRequest, Payment>()
                 .ForMember(dest => dest.CardDetails, opt => opt.MapFrom(src => src));

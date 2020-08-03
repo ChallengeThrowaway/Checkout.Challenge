@@ -51,12 +51,10 @@ namespace PaymentGateway.Api.Controllers
         public async Task<ActionResult<PaymentDetails>> GetPayment(string paymentId)
         {
             var merchantId = User.Identity.Name;
-
             var payment = await _paymentService.GetMerchantPaymentById(new Guid(paymentId), new Guid(merchantId));
 
-            //TODO Dont give everything in response, need new response model
-
-            return Ok(payment);
+            var paymentDetails = _autoMapper.Map<PaymentDetails>(payment);
+            return Ok(paymentDetails);
         }
     }
 }

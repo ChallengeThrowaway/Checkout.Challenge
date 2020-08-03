@@ -45,6 +45,11 @@ namespace PaymentGateway.Service.Services
 
             payment.Merchant = await merchant;
 
+            if (merchant == null)
+            {
+                throw new NullReferenceException("Merchant cannot be null");
+            }
+
             payment.PaymentStatuses.Add(new PaymentStatus
             {
                 StatusKey = validationErrors.Any() ? PaymentStatuses.InternalValidationError : PaymentStatuses.PendingSubmission,
@@ -58,7 +63,6 @@ namespace PaymentGateway.Service.Services
                 return GenerateNewPaymentResponse(payment, validationErrors);
             }
 
-            //TODO Send to acquiring bank using client
             var bankResponse = await _acquiringBankClient.SubmitPaymentToBank(paymentRequest);
 
             if (bankResponse == null)
@@ -88,8 +92,12 @@ namespace PaymentGateway.Service.Services
 
         public async Task<PaymentDetails> GetMerchantPaymentById(Guid paymentId, Guid merchantId)
         {
-            //TODO Mask card information
             var payment = await _paymentRepository.FindByPaymentAndMerchantId(paymentId, merchantId);
+
+            if (payment == null)
+            {
+                return null;
+            }
 
             return new PaymentDetails
             {
