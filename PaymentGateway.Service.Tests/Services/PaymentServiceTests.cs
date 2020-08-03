@@ -11,7 +11,6 @@ using PaymentGateway.Service.Services;
 using PaymentGateway.Service.Validators;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace PaymentGateway.Service.Tests.Services
@@ -19,14 +18,15 @@ namespace PaymentGateway.Service.Tests.Services
     [TestFixture]
     public class PaymentServiceTests
     {
-        private readonly Mock<IPaymentRepository> _paymentRepositoryMock;
-        private readonly Mock<IMerchantRepository> _merchantRepositoryMock;
-        private readonly Mock<IValidator<PaymentRequest>> _validatorMock;
-        private readonly Mock<IAcquiringBankClient> _acquiringBankMock;
-        private readonly Mock<IMapper> _autoMapperMock;
-        private readonly Mock<IDateTimeProvider> _dateTimeProviderMock;
+        private Mock<IPaymentRepository> _paymentRepositoryMock;
+        private Mock<IMerchantRepository> _merchantRepositoryMock;
+        private Mock<IValidator<PaymentRequest>> _validatorMock;
+        private Mock<IAcquiringBankClient> _acquiringBankMock;
+        private Mock<IMapper> _autoMapperMock;
+        private Mock<IDateTimeProvider> _dateTimeProviderMock;
 
-        public PaymentServiceTests()
+        [SetUp]
+        public void Setup() 
         {
             _paymentRepositoryMock = new Mock<IPaymentRepository>();
             _merchantRepositoryMock = new Mock<IMerchantRepository>();

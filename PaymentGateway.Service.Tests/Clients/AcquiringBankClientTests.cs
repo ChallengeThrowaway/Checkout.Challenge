@@ -20,20 +20,17 @@ namespace PaymentGateway.Service.Tests.Clients
     [TestFixture]
     public class AcquiringBankClientTests
     {
-        private readonly Mock<IOptions<AcquiringBankSettings>> _acquiringBankSettingsMock;
-        private readonly Mock<ILogger<AcquiringBankClient>> _loggerMock;
-        private readonly Mock<HttpMessageHandler> _httpMessageHandlerMock;
-
-        public AcquiringBankClientTests()
-        {
-            _acquiringBankSettingsMock = new Mock<IOptions<AcquiringBankSettings>>();
-            _loggerMock = new Mock<ILogger<AcquiringBankClient>>();
-            _httpMessageHandlerMock = new Mock<HttpMessageHandler>();
-        }
+        private Mock<IOptions<AcquiringBankSettings>> _acquiringBankSettingsMock;
+        private Mock<ILogger<AcquiringBankClient>> _loggerMock;
+        private  Mock<HttpMessageHandler> _httpMessageHandlerMock;
 
         [SetUp]
         public void Setup()
         {
+            _acquiringBankSettingsMock = new Mock<IOptions<AcquiringBankSettings>>();
+            _loggerMock = new Mock<ILogger<AcquiringBankClient>>();
+            _httpMessageHandlerMock = new Mock<HttpMessageHandler>();
+
             var mockOptions = new AcquiringBankSettings
             {
                 BaseUrl = "http://testUrl"
