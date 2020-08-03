@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -35,6 +36,7 @@ namespace PaymentGateway.Api
 
             services.AddSingleton<IValidator<PaymentRequest>, PaymentRequestValidator>();
 
+            services.AddAutoMapper(typeof(Startup));
             services.AddControllers();
         }
 

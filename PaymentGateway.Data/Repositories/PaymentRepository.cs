@@ -18,7 +18,7 @@ namespace PaymentGateway.Data.Repositories
         public void Add(Payment payment) 
         {
             _context.Add(payment);
-            _context.SaveChangesAsync();
+            _context.SaveChanges();
         }
 
         public Task<Payment> FindByPaymentId(Guid paymentGuid)

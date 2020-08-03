@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using PaymentGateway.Api.Models;
 using PaymentGateway.Service.Services;
 using System.Threading.Tasks;
@@ -11,23 +12,20 @@ namespace PaymentGateway.Api.Controllers
     {
         //TODO: Add authentication, use authentication to link merchant to a payment so they can reconcile at a later date
         private readonly IPaymentService _paymentService;
+        private readonly IMapper _autoMapper;
 
-        public PaymentController(IPaymentService paymentService)
+        public PaymentController(
+            IPaymentService paymentService,
+            IMapper autoMapper)
         {
             _paymentService = paymentService;
+            _autoMapper = autoMapper;
         }
 
         [HttpPost]
         public ActionResult CreatePayment(PaymentRequest payment)
         {
-            var paymentRequest = new Core.Models.PaymentRequest
-            {
-                Amount = payment.Amount,
-                CardholderName = payment.CardholderName,
-                CardNumber = payment.CardNumber,
-                Ccv = payment.Ccv,
-                CurrencyIsoAlpha3 = payment.CurrencyIsoAlpha3
-            };
+            var paymentRequest = _autoMapper.Map<Core.Models.PaymentRequest>(payment);
 
             _paymentService.ProcessPaymentRequest(paymentRequest);
             return Ok();

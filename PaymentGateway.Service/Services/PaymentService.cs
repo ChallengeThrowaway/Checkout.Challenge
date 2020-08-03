@@ -1,4 +1,5 @@
-﻿using PaymentGateway.Core.Enums;
+﻿using AutoMapper;
+using PaymentGateway.Core.Enums;
 using PaymentGateway.Core.Models;
 using PaymentGateway.Data.Entities;
 using PaymentGateway.Data.Repositories;
@@ -12,32 +13,23 @@ namespace PaymentGateway.Service.Services
     {
         private readonly IPaymentRepository _paymentRepository;
         private readonly IValidator<PaymentRequest> _paymentRequestValidator;
+        private readonly IMapper _autoMapper;
 
         public PaymentService(
             IPaymentRepository paymentRepository,
-            IValidator<PaymentRequest> paymentRequestValidator)
+            IValidator<PaymentRequest> paymentRequestValidator,
+            IMapper autoMapper)
         {
             _paymentRepository = paymentRepository;
             _paymentRequestValidator = paymentRequestValidator;
+            _autoMapper = autoMapper;
         }
 
         public void ProcessPaymentRequest(PaymentRequest paymentRequest)
         {
             var validationErrors = _paymentRequestValidator.Validate(paymentRequest);
 
-            var cardDetails = new CardDetails
-            {
-                CardholderName = paymentRequest.CardholderName,
-                CardNumber = paymentRequest.CardNumber,
-                Ccv = paymentRequest.Ccv
-            };
-
-            var payment = new Payment
-            {
-                Amount = paymentRequest.Amount,
-                CardDetails = cardDetails,
-                CurrencyIsoAlpha3 = paymentRequest.CurrencyIsoAlpha3
-            };
+            var payment = _autoMapper.Map<Payment>(paymentRequest);
 
             payment.PaymentStatuses.Add(new PaymentStatus
             {
