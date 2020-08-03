@@ -1,6 +1,7 @@
-﻿using AcquiringBank.Mock.Models;
+﻿using System;
+using AcquiringBank.Mock.Models;
 using Microsoft.AspNetCore.Mvc;
-using System;
+
 
 namespace AcquiringBank.Mock.Controllers
 {
@@ -12,14 +13,28 @@ namespace AcquiringBank.Mock.Controllers
         [HttpPost]
         public ActionResult<PaymentResponse> CreatePayment(PaymentRequest payment)
         {
-            var response =  new PaymentResponse
+
+            switch (payment.Cvv)
+            {
+                case "600":
+                    return GenerateResponse("submitted");
+                case "666":
+                    return GenerateResponse("ValidationError");
+                case "700":
+                    return GenerateResponse("SubmissionError");
+                default:
+                    return GenerateResponse("Submitted");
+            }
+        }
+
+        private PaymentResponse GenerateResponse(string status)
+        {
+            return new PaymentResponse
             {
                 BankId = Guid.NewGuid(),
-                PaymentStatus = "Submitted",
+                PaymentStatus = status,
                 StatusDateTime = DateTime.UtcNow
             };
-
-            return Ok(response);
         }
     }
 }
