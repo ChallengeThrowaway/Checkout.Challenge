@@ -59,6 +59,7 @@ namespace PaymentGateway.Api
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                MigrateAndSeedDatabase(app);
             }
 
             app.UseRouting();
@@ -72,6 +73,20 @@ namespace PaymentGateway.Api
                 endpoints.MapControllers();
                 endpoints.MapHealthChecks("health");
             });
+        }
+
+        private static void MigrateAndSeedDatabase(IApplicationBuilder app)
+        {
+            using (var serviceScope = app.ApplicationServices
+                .GetRequiredService<IServiceScopeFactory>()
+                .CreateScope())
+            {
+                using (var context = serviceScope.ServiceProvider.GetService<PaymentGatewayContext>())
+                {
+                    context.Database.Migrate();
+                    PaymentGatewaySeeder.Seed(context);
+                }
+            }
         }
     }
 }
