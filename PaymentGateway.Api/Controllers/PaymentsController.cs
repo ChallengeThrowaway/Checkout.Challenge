@@ -8,13 +8,13 @@ namespace PaymentGateway.Api.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]
-    public class PaymentController : ControllerBase
+    public class PaymentsController : ControllerBase
     {
         //TODO: Add authentication, use authentication to link merchant to a payment so they can reconcile at a later date
         private readonly IPaymentService _paymentService;
         private readonly IMapper _autoMapper;
 
-        public PaymentController(
+        public PaymentsController(
             IPaymentService paymentService,
             IMapper autoMapper)
         {
