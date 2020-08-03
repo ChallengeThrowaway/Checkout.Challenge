@@ -1,8 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PaymentGateway.Data.Entities;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace PaymentGateway.Data
 {
@@ -15,5 +12,7 @@ namespace PaymentGateway.Data
         public DbSet<Payment> Payments { get; set; }
         public DbSet<CardDetails> CardDetails { get; set; }
         public DbSet<PaymentStatus> PaymentStatuses { get; set; }
+        public DbSet<Merchant> Merchants { get; set; }
+        public DbSet<ApiKey> ApiKeys { get; set; }
     }
 }

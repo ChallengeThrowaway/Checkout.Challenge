@@ -44,6 +44,7 @@ namespace PaymentGateway.Data.Repositories
             return _context.Payments
                 .Include(p => p.PaymentStatuses)
                 .Include(c => c.CardDetails)
+                .Where(p => p.PaymentId == paymentGuid)
                 .FirstOrDefaultAsync();
         }
 
