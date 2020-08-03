@@ -8,6 +8,9 @@ services:
       dockerfile: PaymentGateway.Api/Dockerfile
     ports:
       - "5000:5000"
+    depends_on:
+      - sql-server-db
+      - acquiringbank.mock
   sql-server-db:
     container_name: mssql
     image: mcr.microsoft.com/mssql/server:2019-latest
