@@ -4,6 +4,7 @@ using PaymentGateway.Core.Models;
 using PaymentGateway.Data.Entities;
 using PaymentGateway.Data.Repositories;
 using PaymentGateway.Service.Clients;
+using PaymentGateway.Service.Extensions;
 using PaymentGateway.Service.Validators;
 using System;
 using System.Collections.Generic;
@@ -84,10 +85,19 @@ namespace PaymentGateway.Service.Services
             return GenerateNewPaymentResponse(payment);
         }
 
-        public async Task<Payment> GetMerchantPaymentById(Guid paymentId, Guid merchantId)
+        public async Task<PaymentDetails> GetMerchantPaymentById(Guid paymentId, Guid merchantId)
         {
             //TODO Mask card information
-            return await _paymentRepository.FindByPaymentAndMerchantId(paymentId, merchantId);
+            var payment =  await _paymentRepository.FindByPaymentAndMerchantId(paymentId, merchantId);
+
+            return new PaymentDetails
+            {
+                Amount = payment.Amount,
+                CardholderName = payment.CardDetails.CardholderName,
+                CurrencyIsoAlpha3 = payment.CurrencyIsoAlpha3,
+                LatestPaymentStatus = payment.PaymentStatuses.OrderByDescending(d => d.StatusDateTime).FirstOrDefault().StatusKey.ToString(),
+                MaskedCardNumber = payment.CardDetails.CardNumber.FormatMaskedCardDetails()
+            };
         }
 
         private PaymentResponse GenerateNewPaymentResponse(Payment payment, List<string> validationErrors = null)

@@ -82,6 +82,13 @@ namespace PaymentGateway.Service.Clients
         //TODO: Probably a better way to do this, should investigate a different approach. This would not be pleasant to update when new statuses are added, and doesn't really belong in this class.
         private PaymentStatuses MapStatusFromString(AcquiringBankResponse response) 
         {
+            if (response.PaymentStatus == null) 
+            {
+                _logger.LogWarning($"Null status response from aqcuiring bank");
+
+                return PaymentStatuses.SubmissionError;
+            }
+
             if (response.PaymentStatus.Equals("ValidationError"))
             {
                 return PaymentStatuses.BankValidationError;
@@ -97,7 +104,7 @@ namespace PaymentGateway.Service.Clients
                 return PaymentStatuses.Submitted;
             }
 
-            _logger.LogWarning($"Unmapped status : {response.PaymentStatus}");
+            _logger.LogWarning($"Unmapped status : {response.PaymentStatus} from acquiring bank");
 
             return PaymentStatuses.SubmissionError;
         }

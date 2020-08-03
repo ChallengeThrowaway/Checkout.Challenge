@@ -1,5 +1,5 @@
 ﻿
-namespace PaymentGateway.Api.Models
+namespace PaymentGateway.Core.Models
 {
     public class PaymentDetails
     {
