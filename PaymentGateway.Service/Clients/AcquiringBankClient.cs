@@ -29,6 +29,11 @@ namespace PaymentGateway.Service.Clients
 
         public async Task<AcquiringBankPaymentDetails> SubmitPaymentToBank(PaymentRequest paymentRequest)
         {
+            if (paymentRequest == null)
+            {
+                throw new ArgumentNullException("paymentRequest");
+            }
+
             HttpResponseMessage response;
 
             try
