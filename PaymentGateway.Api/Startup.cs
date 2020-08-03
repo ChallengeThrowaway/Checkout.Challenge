@@ -53,6 +53,8 @@ namespace PaymentGateway.Api
 
             services.AddAutoMapper(typeof(Startup));
             services.AddControllers();
+
+            services.AddSwaggerGen();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -74,6 +76,12 @@ namespace PaymentGateway.Api
             {
                 endpoints.MapControllers();
                 endpoints.MapHealthChecks("health");
+            });
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Payment Gateway API v1");
             });
         }
 
