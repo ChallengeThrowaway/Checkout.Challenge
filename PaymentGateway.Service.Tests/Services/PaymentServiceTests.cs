@@ -26,7 +26,7 @@ namespace PaymentGateway.Service.Tests.Services
         private Mock<IDateTimeProvider> _dateTimeProviderMock;
 
         [SetUp]
-        public void Setup() 
+        public void Setup()
         {
             _paymentRepositoryMock = new Mock<IPaymentRepository>();
             _merchantRepositoryMock = new Mock<IMerchantRepository>();
@@ -97,8 +97,6 @@ namespace PaymentGateway.Service.Tests.Services
             Assert.AreEqual(expectedPaymentGuid, response.PaymentId);
             Assert.AreEqual(PaymentStatuses.InternalValidationError, response.PaymentStatus);
             Assert.Contains("Test validation failure", response.ValidationErrors);
-
-            _paymentRepositoryMock.Verify(x => x.Add(It.IsAny<Payment>()), Times.Once());
         }
 
         [Test]
@@ -156,9 +154,6 @@ namespace PaymentGateway.Service.Tests.Services
             Assert.AreEqual(expectedPaymentGuid, response.PaymentId);
             Assert.AreEqual(PaymentStatuses.SubmissionError, response.PaymentStatus);
             Assert.IsNull(response.ValidationErrors);
-
-            _paymentRepositoryMock.Verify(x => x.Add(It.IsAny<Payment>()), Times.Once());
-            _paymentRepositoryMock.Verify(x => x.Update(It.IsAny<Payment>()), Times.Once());
         }
 
         [Test]
@@ -219,9 +214,85 @@ namespace PaymentGateway.Service.Tests.Services
             Assert.AreEqual(expectedPaymentGuid, response.PaymentId);
             Assert.AreEqual(PaymentStatuses.Submitted, response.PaymentStatus);
             Assert.IsNull(response.ValidationErrors);
+        }
 
-            _paymentRepositoryMock.Verify(x => x.Add(It.IsAny<Payment>()), Times.Once());
-            _paymentRepositoryMock.Verify(x => x.Update(It.IsAny<Payment>()), Times.Once());
+        [Test]
+        public async Task GetMerchantPaymentById_PaymentDoesNotExist_ReturnsNull()
+        {
+            // Arrange
+            Payment paymentMock = null;
+
+            _paymentRepositoryMock.Setup(pr => pr.FindByPaymentAndMerchantId(It.IsAny<Guid>(), It.IsAny<Guid>()))
+                .ReturnsAsync(paymentMock);
+
+            var sut = new PaymentService(
+                _paymentRepositoryMock.Object,
+                _merchantRepositoryMock.Object,
+                _validatorMock.Object,
+                _acquiringBankMock.Object,
+                _autoMapperMock.Object,
+                _dateTimeProviderMock.Object);
+
+            // Act
+            var result = await sut.GetMerchantPaymentById(Guid.NewGuid(), Guid.NewGuid());
+
+            // Assert
+            Assert.Null(result);
+        }
+
+        [Test]
+        public async Task GetMerchantPaymentById_PaymentExists_ReturnsCorrectResponse()
+        {
+            // Arrange
+            DateTimeOffset firstStatusTimeMock = new DateTimeOffset(2020, 01, 01, 0, 0, 0, new TimeSpan(0, 0, 0));
+            DateTimeOffset secondStatusTimeMock = new DateTimeOffset(2020, 01, 01, 0, 0, 1, new TimeSpan(0, 0, 0));
+
+            Guid paymentGuid = new Guid("52f5bf09-56df-4261-acc1-20346812e2fb");
+            Merchant merchantMock = GetMockMerchant(); 
+
+            CardDetails cardDetails = new CardDetails
+            {
+                CardholderName = "Testy McTester",
+                CardNumber = "1111 2222 3333 4444",
+                Cvv = "123",
+                CardDetailsId = Guid.NewGuid() //Not important for the test, can be unique each time
+            };
+
+            List<PaymentStatus> paymentStatusesMock = new List<PaymentStatus>
+            {
+                new PaymentStatus {StatusKey = PaymentStatuses.PendingSubmission, StatusDateTime = firstStatusTimeMock},
+                new PaymentStatus {StatusKey = PaymentStatuses.Submitted, StatusDateTime = secondStatusTimeMock}
+            };
+
+            Payment paymentMock = new Payment
+            {
+                Amount = 100,
+                BankId = Guid.NewGuid(),
+                CardDetails = cardDetails,
+                Merchant = merchantMock,
+                CurrencyIsoAlpha3 = "GBP",
+                PaymentStatuses = paymentStatusesMock
+            };
+
+            _paymentRepositoryMock.Setup(pr => pr.FindByPaymentAndMerchantId(It.IsAny<Guid>(), It.IsAny<Guid>()))
+                .ReturnsAsync(paymentMock);
+
+            var sut = new PaymentService(
+                _paymentRepositoryMock.Object,
+                _merchantRepositoryMock.Object,
+                _validatorMock.Object,
+                _acquiringBankMock.Object,
+                _autoMapperMock.Object,
+                _dateTimeProviderMock.Object);
+
+            // Act
+            var result = await sut.GetMerchantPaymentById(paymentGuid, merchantMock.MerchantId);
+            // Assert
+            Assert.AreEqual(100.00, result.Amount);
+            Assert.AreEqual("Testy McTester", result.CardholderName);
+            Assert.AreEqual("GBP", result.CurrencyIsoAlpha3);
+            Assert.AreEqual("1111********4444", result.MaskedCardNumber);
+            Assert.AreEqual("Submitted", result.LatestPaymentStatus);
         }
 
         private PaymentRequest GetMockPaymentRequest()
