@@ -14,7 +14,7 @@ namespace PaymentGateway.Service.Clients
 
         public async Task<PaymentResponse> SubmitPaymentToBank(PaymentRequest paymentRequest)
         {
-            if (paymentRequest.Ccv == "666")
+            if (paymentRequest.Cvv == "666")
             {
                 return new PaymentResponse
                 {

@@ -6,6 +6,7 @@ using System.Linq;
 namespace PaymentGateway.Service.Validators
 {
     //TODO: Replace whole class with more robust validation, likely a third party solution
+    //TODO: Replace with two seperate validators, one for the payment and one for the card details, really shouldn't be in one
     public class PaymentRequestValidator : IValidator<PaymentRequest>
     {
 
@@ -16,7 +17,7 @@ namespace PaymentGateway.Service.Validators
             ValidationErrors.AddIfNotNull(ValidateAmount(paymentRequest));
             ValidationErrors.AddIfNotNull(ValidateCurrency(paymentRequest));
             ValidationErrors.AddIfNotNull(ValidateCardNumber(paymentRequest));
-            ValidationErrors.AddIfNotNull(ValidateCcv(paymentRequest));
+            ValidationErrors.AddIfNotNull(ValidateCvv(paymentRequest));
             ValidationErrors.AddIfNotNull(ValidateCardholderName(paymentRequest));
 
             return ValidationErrors;
@@ -40,11 +41,11 @@ namespace PaymentGateway.Service.Validators
             return strippedCardNumber.All(c => char.IsNumber(c)) && strippedCardNumber.Length == 16 ? null : "Card number must be 16 digits long, and contain only numbers";
         }
 
-        private string ValidateCcv(PaymentRequest paymentRequest)
+        private string ValidateCvv(PaymentRequest paymentRequest)
         {
-            string strippedCcv = paymentRequest.Ccv.Replace(" ","");
+            string strippedCvv = paymentRequest.Cvv.Replace(" ","");
 
-            return strippedCcv.All(c => char.IsNumber(c)) && strippedCcv.Length == 3 ? null : "CCV must be 3 digits long, and only contain numbers";
+            return strippedCvv.All(c => char.IsNumber(c)) && strippedCvv.Length == 3 ? null : "CVV must be 3 digits long, and only contain numbers";
         }
 
         private string ValidateCardholderName(PaymentRequest paymentRequest) 

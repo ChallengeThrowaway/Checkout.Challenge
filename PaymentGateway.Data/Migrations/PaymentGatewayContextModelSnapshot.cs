@@ -31,7 +31,7 @@ namespace PaymentGateway.Data.Migrations
                     b.Property<string>("CardholderName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Ccv")
+                    b.Property<string>("Cvv")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("CardDetailsId");
