@@ -34,7 +34,6 @@ namespace PaymentGateway.Api.Controllers
 
             var response = await _paymentService.ProcessPaymentRequest(paymentRequest);
 
-            //TODO Find a way to improve this
             var paymentResponse = new PaymentResponse
             {
                 PaymentId = response.PaymentId,
@@ -48,10 +47,10 @@ namespace PaymentGateway.Api.Controllers
         [HttpGet]
         [Route("{paymentId}")]
         [Authorize]
-        public async Task<ActionResult<PaymentDetails>> GetPayment(string paymentId)
+        public async Task<ActionResult<PaymentDetails>> GetPayment(Guid paymentId)
         {
             var merchantId = User.Identity.Name;
-            var payment = await _paymentService.GetMerchantPaymentById(new Guid(paymentId), new Guid(merchantId));
+            var payment = await _paymentService.GetMerchantPaymentById(paymentId, new Guid(merchantId));
 
             var paymentDetails = _autoMapper.Map<PaymentDetails>(payment);
             return Ok(paymentDetails);
