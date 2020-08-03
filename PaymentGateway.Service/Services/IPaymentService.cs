@@ -7,7 +7,7 @@ namespace PaymentGateway.Service.Services
 {
     public interface IPaymentService
     {
-        void ProcessPaymentRequest(PaymentRequest paymentRequest);
-        public Task<Payment> GetPayment(Guid paymentGuid);
+        Task ProcessPaymentRequest(PaymentRequest paymentRequest);
+        Task<Payment> GetPayment(Guid paymentGuid);
     }
 }

@@ -15,10 +15,28 @@ namespace PaymentGateway.Data.Repositories
             _context = context;            
         }
 
-        public void Add(Payment payment) 
+        public async Task<Payment> Add(Payment payment) 
         {
             _context.Add(payment);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
+
+            return payment;
+        }
+
+        public async Task<Payment> Update(Payment payment)
+        {
+            var oldPayment = await _context.Payments
+                .Include(p => p.PaymentStatuses)
+                .Where(p => p.PaymentId == payment.PaymentId)
+                .FirstOrDefaultAsync();
+
+            if (oldPayment != null)
+            {
+                _context.Entry(oldPayment).CurrentValues.SetValues(payment);
+                await _context.SaveChangesAsync();
+            }
+
+            return payment;
         }
 
         public Task<Payment> FindByPaymentId(Guid paymentGuid)

@@ -7,8 +7,8 @@ namespace PaymentGateway.Data.Entities
     public class PaymentStatus
     {
         [Key]
-        public Guid StatusId { get; set; }
-        public PaymentStatuses Status { get; set; }
+        public Guid PaymentStatusId { get; set; }
+        public PaymentStatuses StatusKey { get; set; }
         public DateTimeOffset StatusDateTime { get; set; }
     }
 }

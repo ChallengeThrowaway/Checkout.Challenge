@@ -23,11 +23,11 @@ namespace PaymentGateway.Api.Controllers
         }
 
         [HttpPost]
-        public ActionResult CreatePayment(PaymentRequest payment)
+        public async Task<ActionResult> CreatePayment(PaymentRequest payment)
         {
             var paymentRequest = _autoMapper.Map<Core.Models.PaymentRequest>(payment);
 
-            _paymentService.ProcessPaymentRequest(paymentRequest);
+            await _paymentService.ProcessPaymentRequest(paymentRequest);
             return Ok();
         }
 

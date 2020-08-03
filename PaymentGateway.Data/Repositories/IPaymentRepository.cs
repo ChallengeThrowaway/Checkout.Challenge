@@ -6,7 +6,8 @@ namespace PaymentGateway.Data.Repositories
 {
     public interface IPaymentRepository
     {
-        void Add(Payment payment);
+        Task<Payment> Add(Payment payment);
+        Task<Payment> Update(Payment payment);
         Task<Payment> FindByPaymentId(Guid paymentGuid);
     }
 }

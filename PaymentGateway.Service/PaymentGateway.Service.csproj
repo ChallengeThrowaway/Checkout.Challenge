@@ -5,10 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Clients\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\PaymentGateway.Data\PaymentGateway.Data.csproj" />
   </ItemGroup>
 

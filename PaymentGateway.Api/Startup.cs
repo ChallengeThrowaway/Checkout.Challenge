@@ -8,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 using PaymentGateway.Core.Models;
 using PaymentGateway.Data;
 using PaymentGateway.Data.Repositories;
+using PaymentGateway.Service.Clients;
 using PaymentGateway.Service.Services;
 using PaymentGateway.Service.Validators;
 
@@ -35,6 +36,8 @@ namespace PaymentGateway.Api
             services.AddTransient<IPaymentService, PaymentService>();
 
             services.AddSingleton<IValidator<PaymentRequest>, PaymentRequestValidator>();
+
+            services.AddSingleton<IAcquiringBankClient, AcquiringBankClient>();
 
             services.AddAutoMapper(typeof(Startup));
             services.AddControllers();
