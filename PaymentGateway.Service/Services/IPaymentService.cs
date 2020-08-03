@@ -8,6 +8,6 @@ namespace PaymentGateway.Service.Services
     public interface IPaymentService
     {
         Task ProcessPaymentRequest(PaymentRequest paymentRequest);
-        Task<Payment> GetPayment(Guid paymentGuid);
+        Task<Payment> GetMerchantPaymentById(Guid paymentGuid, Guid merchantId);
     }
 }

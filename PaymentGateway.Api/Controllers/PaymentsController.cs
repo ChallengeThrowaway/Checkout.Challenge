@@ -41,11 +41,14 @@ namespace PaymentGateway.Api.Controllers
         }
 
         [HttpGet]
-        [Route("{Id}")]
+        [Route("{paymentId}")]
         [Authorize]
-        public async Task<ActionResult<PaymentDetails>> GetPayment(string id)
+        public async Task<ActionResult<PaymentDetails>> GetPayment(string paymentId)
         {
-            var payment = await _paymentService.GetPayment(new System.Guid(id));
+            var merchantId = User.Identity.Name;
+
+            var payment = await _paymentService.GetMerchantPaymentById(new Guid(paymentId), new Guid(merchantId));
+
             return Ok(payment);
         }
     }

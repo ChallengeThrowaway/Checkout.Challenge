@@ -82,10 +82,10 @@ namespace PaymentGateway.Service.Services
         }
 
         //TODO: Only return payment if merchant who submitted payment is the one requesting it
-        public Task<Payment> GetPayment(Guid paymentGuid)
+        public async Task<Payment> GetMerchantPaymentById(Guid paymentId, Guid merchantId)
         {
             //TODO Mask card information
-            return _paymentRepository.FindByPaymentId(paymentGuid);
+            return await _paymentRepository.FindByPaymentAndMerchantId(paymentId, merchantId);
         }
     }
 }

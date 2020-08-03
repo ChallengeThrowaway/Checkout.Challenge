@@ -9,5 +9,6 @@ namespace PaymentGateway.Data.Repositories
         Task<Payment> Add(Payment payment);
         Task<Payment> Update(Payment payment);
         Task<Payment> FindByPaymentId(Guid paymentGuid);
+        Task<Payment> FindByPaymentAndMerchantId(Guid paymentGuid, Guid merchantId);
     }
 }

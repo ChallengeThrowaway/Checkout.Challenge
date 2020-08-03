@@ -39,13 +39,22 @@ namespace PaymentGateway.Data.Repositories
             return payment;
         }
 
-        public Task<Payment> FindByPaymentId(Guid paymentGuid)
+        public Task<Payment> FindByPaymentId(Guid paymentId)
         {
             return _context.Payments
                 .Include(p => p.PaymentStatuses)
                 .Include(c => c.CardDetails)
-                .Where(p => p.PaymentId == paymentGuid)
+                .Where(p => p.PaymentId == paymentId)
                 .FirstOrDefaultAsync();
+        }
+
+        public Task<Payment> FindByPaymentAndMerchantId(Guid paymentId, Guid merchantId)
+        {
+            return _context.Payments
+            .Include(p => p.PaymentStatuses)
+            .Include(c => c.CardDetails)
+            .Where(p => p.PaymentId == paymentId && p.Merchant.MerchantId == merchantId)
+            .FirstOrDefaultAsync();
         }
 
     }
