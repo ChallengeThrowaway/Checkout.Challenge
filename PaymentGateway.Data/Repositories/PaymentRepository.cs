@@ -17,6 +17,11 @@ namespace PaymentGateway.Data.Repositories
 
         public async Task<Payment> Add(Payment payment)
         {
+            if (payment == null)
+            {
+                throw new ArgumentNullException("payment");
+            }
+
             _context.Add(payment);
             await _context.SaveChangesAsync();
 
