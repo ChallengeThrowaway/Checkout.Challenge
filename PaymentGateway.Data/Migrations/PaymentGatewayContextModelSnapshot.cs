@@ -21,9 +21,9 @@ namespace PaymentGateway.Data.Migrations
 
             modelBuilder.Entity("PaymentGateway.Data.Entities.ApiKey", b =>
                 {
-                    b.Property<int>("ApiKeyId")
+                    b.Property<Guid>("ApiKeyId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("uniqueidentifier")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Key")

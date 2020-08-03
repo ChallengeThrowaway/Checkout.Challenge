@@ -6,7 +6,7 @@ namespace PaymentGateway.Data.Entities
     public class ApiKey
     {
         [Key]
-        public int ApiKeyId { get; set; }
+        public Guid ApiKeyId { get; set; }
         public Merchant Owner { get; set; }
         public string Key { get; set; }
         public DateTimeOffset ValidFrom { get; set; }

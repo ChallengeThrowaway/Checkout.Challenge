@@ -24,7 +24,7 @@ namespace PaymentGateway.Data.Migrations
                 name: "ApiKeys",
                 columns: table => new
                 {
-                    ApiKeyId = table.Column<int>(nullable: false)
+                    ApiKeyId = table.Column<Guid>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     OwnerMerchantId = table.Column<Guid>(nullable: true),
                     Key = table.Column<string>(nullable: true),
