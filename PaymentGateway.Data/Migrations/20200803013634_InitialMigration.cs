@@ -46,14 +46,14 @@ namespace PaymentGateway.Data.Migrations
                 name: "PaymentStatuses",
                 columns: table => new
                 {
-                    StatusId = table.Column<Guid>(nullable: false),
-                    Status = table.Column<int>(nullable: false),
+                    PaymentStatusId = table.Column<Guid>(nullable: false),
+                    StatusKey = table.Column<int>(nullable: false),
                     StatusDateTime = table.Column<DateTimeOffset>(nullable: false),
                     PaymentId = table.Column<Guid>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PaymentStatuses", x => x.StatusId);
+                    table.PrimaryKey("PK_PaymentStatuses", x => x.PaymentStatusId);
                     table.ForeignKey(
                         name: "FK_PaymentStatuses_Payments_PaymentId",
                         column: x => x.PaymentId,

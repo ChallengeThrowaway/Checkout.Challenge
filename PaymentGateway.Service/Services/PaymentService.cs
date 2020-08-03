@@ -37,7 +37,7 @@ namespace PaymentGateway.Service.Services
 
             payment.PaymentStatuses.Add(new PaymentStatus
             {
-                Status = validationErrors.Count > 0 ? PaymentStatuses.InternalValidationError : PaymentStatuses.PendingSubmission,
+                StatusKey = validationErrors.Count > 0 ? PaymentStatuses.InternalValidationError : PaymentStatuses.PendingSubmission,
                 StatusDateTime = DateTime.UtcNow
             });
 
@@ -54,8 +54,8 @@ namespace PaymentGateway.Service.Services
 
             if (bankResponse == null)
             {
-                payment.PaymentStatuses.Add(new PaymentStatus { 
-                    Status = PaymentStatuses.SubmissionError,
+                payment.PaymentStatuses.Add(new PaymentStatus {
+                    StatusKey = PaymentStatuses.SubmissionError,
                     StatusDateTime = DateTime.UtcNow
                 });
 
@@ -67,7 +67,7 @@ namespace PaymentGateway.Service.Services
             payment.BankId = bankResponse.BankId;
             payment.PaymentStatuses.Add(new PaymentStatus
             {
-                Status = bankResponse.PaymentStatus,
+                StatusKey = bankResponse.PaymentStatus,
                 StatusDateTime = bankResponse.StatusDateTime
             });
 

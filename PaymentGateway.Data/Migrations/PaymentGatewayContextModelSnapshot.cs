@@ -66,20 +66,20 @@ namespace PaymentGateway.Data.Migrations
 
             modelBuilder.Entity("PaymentGateway.Data.Entities.PaymentStatus", b =>
                 {
-                    b.Property<Guid>("StatusId")
+                    b.Property<Guid>("PaymentStatusId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("PaymentId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
                     b.Property<DateTimeOffset>("StatusDateTime")
                         .HasColumnType("datetimeoffset");
 
-                    b.HasKey("StatusId");
+                    b.Property<int>("StatusKey")
+                        .HasColumnType("int");
+
+                    b.HasKey("PaymentStatusId");
 
                     b.HasIndex("PaymentId");
 

@@ -10,7 +10,7 @@ using PaymentGateway.Data;
 namespace PaymentGateway.Data.Migrations
 {
     [DbContext(typeof(PaymentGatewayContext))]
-    [Migration("20200802181056_InitialMigration")]
+    [Migration("20200803013634_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -68,20 +68,20 @@ namespace PaymentGateway.Data.Migrations
 
             modelBuilder.Entity("PaymentGateway.Data.Entities.PaymentStatus", b =>
                 {
-                    b.Property<Guid>("StatusId")
+                    b.Property<Guid>("PaymentStatusId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("PaymentId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
                     b.Property<DateTimeOffset>("StatusDateTime")
                         .HasColumnType("datetimeoffset");
 
-                    b.HasKey("StatusId");
+                    b.Property<int>("StatusKey")
+                        .HasColumnType("int");
+
+                    b.HasKey("PaymentStatusId");
 
                     b.HasIndex("PaymentId");
 
