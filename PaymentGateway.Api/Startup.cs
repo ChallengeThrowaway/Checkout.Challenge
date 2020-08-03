@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using PaymentGateway.Api.Authentication;
+using PaymentGateway.Api.Middleware;
 using PaymentGateway.Core.Models;
 using PaymentGateway.Data;
 using PaymentGateway.Data.Repositories;
@@ -63,6 +64,8 @@ namespace PaymentGateway.Api
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseMiddleware<GlobalExceptionMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {

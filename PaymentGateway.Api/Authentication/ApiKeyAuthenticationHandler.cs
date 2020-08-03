@@ -34,7 +34,7 @@ namespace PaymentGateway.Api.Authentication
         {
             DateTimeOffset requestTime = DateTime.UtcNow;
 
-            if (!Request.Headers.TryGetValue(ApiKeyHeaderName, out var apiKeyHeaderValues)) 
+            if (!Request.Headers.TryGetValue(ApiKeyHeaderName, out var apiKeyHeaderValues))
             {
                 return AuthenticateResult.NoResult();
             }
