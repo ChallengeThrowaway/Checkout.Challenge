@@ -6,6 +6,7 @@ using PaymentGateway.Data.Repositories;
 using PaymentGateway.Service.Clients;
 using PaymentGateway.Service.Validators;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -53,12 +54,7 @@ namespace PaymentGateway.Service.Services
 
             if (validationErrors.Any()) 
             {
-                return new PaymentResponse
-                {
-                    PaymentId = payment.PaymentId,
-                    PaymentStatus = payment.PaymentStatuses.OrderByDescending(d => d.StatusDateTime).FirstOrDefault().StatusKey,
-                    ValidationErrors = validationErrors
-                };
+                return GenerateNewPaymentResponse(payment, validationErrors);
             }
 
             //TODO Send to acquiring bank using client
@@ -73,12 +69,7 @@ namespace PaymentGateway.Service.Services
 
                 await _paymentRepository.Update(payment);
 
-                return new PaymentResponse
-                {
-                    PaymentId = payment.PaymentId,
-                    PaymentStatus = payment.PaymentStatuses.OrderByDescending(d => d.StatusDateTime).FirstOrDefault().StatusKey,
-                    ValidationErrors = validationErrors
-                }; 
+                return GenerateNewPaymentResponse(payment);
             }
 
             payment.BankId = bankResponse.BankId;
@@ -90,19 +81,23 @@ namespace PaymentGateway.Service.Services
 
             payment = await _paymentRepository.Update(payment);
 
-            //TODO: Find a way to reduce code duplication
-            return new PaymentResponse
-            {
-                PaymentId = payment.PaymentId,
-                PaymentStatus = payment.PaymentStatuses.OrderByDescending(d => d.StatusDateTime).FirstOrDefault().StatusKey,
-                ValidationErrors = validationErrors
-            };
+            return GenerateNewPaymentResponse(payment);
         }
 
         public async Task<Payment> GetMerchantPaymentById(Guid paymentId, Guid merchantId)
         {
             //TODO Mask card information
             return await _paymentRepository.FindByPaymentAndMerchantId(paymentId, merchantId);
+        }
+
+        private PaymentResponse GenerateNewPaymentResponse(Payment payment, List<string> validationErrors = null)
+        {
+            return new PaymentResponse
+            {
+                PaymentId = payment.PaymentId,
+                PaymentStatus = payment.PaymentStatuses.OrderByDescending(d => d.StatusDateTime).FirstOrDefault().StatusKey,
+                ValidationErrors = validationErrors
+            };
         }
     }
 }

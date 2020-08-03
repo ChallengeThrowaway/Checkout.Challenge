@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using PaymentGateway.Api.Authentication;
 using PaymentGateway.Api.Middleware;
+using PaymentGateway.Core.Configuration;
 using PaymentGateway.Core.Models;
 using PaymentGateway.Data;
 using PaymentGateway.Data.Repositories;
@@ -49,8 +50,11 @@ namespace PaymentGateway.Api
             services.AddSingleton<IValidator<PaymentRequest>, PaymentRequestValidator>();
             services.AddSingleton<IAcquiringBankClient, AcquiringBankClient>();
 
+            services.Configure<AcquiringBankSettings>(Configuration.GetSection("AcquiringBankSettings"));
+
             services.AddAutoMapper(typeof(Startup));
             services.AddControllers();
+            services.AddHttpClient();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,38 +1,95 @@
-﻿using PaymentGateway.Core.Enums;
+﻿using Microsoft.Extensions.Logging;
+using PaymentGateway.Core.Configuration;
+using PaymentGateway.Core.Enums;
 using PaymentGateway.Core.Models;
 using System;
-using System.Collections.Generic;
+using System.Net.Http;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace PaymentGateway.Service.Clients
 {
     public class AcquiringBankClient : IAcquiringBankClient
     {
+        private readonly AcquiringBankSettings _acquiringBankSettings;
+        private readonly HttpClient _httpClient;
+        private readonly ILogger<IAcquiringBankClient> _logger;
 
-        public AcquiringBankClient() { }
-
-        public async Task<AcquiringBankResponse> SubmitPaymentToBank(PaymentRequest paymentRequest)
+        public AcquiringBankClient(
+            AcquiringBankSettings acquiringBankSettings,
+            HttpClient httpClient,
+            ILogger<AcquiringBankClient> logger) 
         {
-            if (paymentRequest.Cvv == "666")
+            _acquiringBankSettings = acquiringBankSettings;
+            _httpClient = httpClient;
+            _logger = logger;
+        }
+
+        public async Task<AcquiringBankPaymentDetails> SubmitPaymentToBank(PaymentRequest paymentRequest)
+        {
+            HttpResponseMessage response;
+
+            try
             {
-                return new AcquiringBankResponse
-                {
-                    BankId = Guid.NewGuid(),
-                    PaymentStatus = PaymentStatuses.SubmissionError,
-                    StatusDateTime = DateTime.UtcNow
-                };
+                var data = JsonSerializer.Serialize(paymentRequest);
+                var content = new StringContent(data.ToString(), Encoding.UTF8, "application/json");
+                response = await _httpClient.PostAsync(_acquiringBankSettings.BaseUrl, content);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error submitting payment request to acquiring bank");
+
+                return GenerateErrorDetails();
             }
 
-            else 
+            var responseContent = await response.Content.ReadAsByteArrayAsync();
+
+            var responseObject = JsonSerializer.Deserialize<AcquiringBankResponse>(responseContent);
+
+            return GenerateDetails(responseObject);
+        }
+
+        private AcquiringBankPaymentDetails GenerateDetails(AcquiringBankResponse response)
+        {
+            return new AcquiringBankPaymentDetails
             {
-                return new AcquiringBankResponse
-                {
-                    BankId = Guid.NewGuid(),
-                    PaymentStatus = PaymentStatuses.Submitted,
-                    StatusDateTime = DateTime.UtcNow
-                };
+                BankId = response.BankId,
+                PaymentStatus = MapStatusFromString(response),
+                StatusDateTime = response.StatusDateTime
+            };
+        }
+
+        private AcquiringBankPaymentDetails GenerateErrorDetails()
+        {
+            return new AcquiringBankPaymentDetails
+            {
+                PaymentStatus = PaymentStatuses.SubmissionError,
+                StatusDateTime = DateTime.UtcNow
+            };
+        }
+
+        //TODO: Probably a better way to do this, should investigate a different approach. This would not be pleasant to update when new statuses are added, and doesn't really belong in this class.
+        private PaymentStatuses MapStatusFromString(AcquiringBankResponse response) 
+        {
+            if (response.PaymentStatus.Equals("ValidationError"))
+            {
+                return PaymentStatuses.BankValidationError;
             }
+
+            if (response.PaymentStatus.Equals("SubmissionError"))
+            {
+                return PaymentStatuses.SubmissionError;
+            }
+
+            if (response.PaymentStatus.Equals("Submitted"))
+            {
+                return PaymentStatuses.Submitted;
+            }
+
+            _logger.LogWarning($"Unmapped status : {response.PaymentStatus}");
+
+            return PaymentStatuses.SubmissionError;
         }
     }
 }

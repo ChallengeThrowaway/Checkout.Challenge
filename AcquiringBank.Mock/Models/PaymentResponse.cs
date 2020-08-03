@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace PaymentGateway.Core.Models
+namespace AcquiringBank.Mock.Models
 {
-    public class AcquiringBankResponse
+    public class PaymentResponse
     {
         public string PaymentStatus { get; set; }
         public DateTimeOffset StatusDateTime { get; set; }

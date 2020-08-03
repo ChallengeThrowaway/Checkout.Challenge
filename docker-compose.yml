@@ -18,5 +18,14 @@ services:
       ACCEPT_EULA: "Y"
     volumes:
       - sqlvolume:/var/opt/mssql
+  acquiringbank.mock:
+    container_name: bankMock
+    image: ${DOCKER_REGISTRY-}acquiringbankmock
+    build:
+      context: .
+      dockerfile: AcquiringBank.Mock/Dockerfile
+    ports:
+      - "6000:6000"
+
 volumes: 
   sqlvolume:
