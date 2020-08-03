@@ -1,21 +1,21 @@
-﻿using Microsoft.EntityFrameworkCore;
-using PaymentGateway.Data.Entities;
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using PaymentGateway.Data.Entities;
 
 namespace PaymentGateway.Data.Repositories
 {
     public class PaymentRepository : IPaymentRepository
     {
-        private readonly PaymentGatewayContext _context; 
-        
+        private readonly PaymentGatewayContext _context;
+
         public PaymentRepository(PaymentGatewayContext context)
         {
-            _context = context;            
+            _context = context;
         }
 
-        public async Task<Payment> Add(Payment payment) 
+        public async Task<Payment> Add(Payment payment)
         {
             _context.Add(payment);
             await _context.SaveChangesAsync();

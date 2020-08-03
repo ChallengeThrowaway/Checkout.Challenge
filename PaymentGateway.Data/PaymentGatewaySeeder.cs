@@ -1,6 +1,6 @@
-﻿using PaymentGateway.Data.Entities;
-using System;
+﻿using System;
 using System.Linq;
+using PaymentGateway.Data.Entities;
 
 namespace PaymentGateway.Data
 {
@@ -9,7 +9,7 @@ namespace PaymentGateway.Data
         public static void Seed(PaymentGatewayContext context)
         {
             // Check there are no existing merchants/api keys before migrating
-            if (!context.Merchants.Any() && !context.ApiKeys.Any()) 
+            if (!context.Merchants.Any() && !context.ApiKeys.Any())
             {
                 var seedMerchant1 = new Merchant
                 {
@@ -17,7 +17,7 @@ namespace PaymentGateway.Data
                     CreatedDate = new DateTimeOffset(2020, 08, 03, 0, 0, 0, 0, new TimeSpan(0, 0, 0)),
                     MerchantName = "Test Merchant 1"
                 };
-                
+
                 var seedMerchant2 = new Merchant
                 {
                     MerchantId = new Guid("2fbd9d9e-4555-4214-be35-a0d571c933d0"),

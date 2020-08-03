@@ -20,8 +20,8 @@ namespace PaymentGateway.Api
     public class Startup
     {
         public IConfiguration Configuration { get; }
-        
-        public Startup(IConfiguration configuration) 
+
+        public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
@@ -38,13 +38,11 @@ namespace PaymentGateway.Api
                 options.DefaultChallengeScheme = ApiKeyAuthenticationOptions.DefaultScheme;
             }).AddApiKeySupport(options => { });
 
-            //TODO: Find a way to secure this
             services.AddDbContext<PaymentGatewayContext>(options => options.UseSqlServer(Configuration.GetConnectionString("GatewayConnectionString")));
             services.Configure<AcquiringBankSettings>(options => Configuration.GetSection("AcquiringBankSettings").Bind(options));
 
             services.AddTransient<IPaymentRepository, PaymentRepository>();
             services.AddTransient<IPaymentService, PaymentService>();
-
             services.AddTransient<IApiKeyRepository, ApiKeyRepository>();
             services.AddTransient<IMerchantRepository, MerchantRepository>();
 
@@ -53,7 +51,6 @@ namespace PaymentGateway.Api
 
             services.AddAutoMapper(typeof(Startup));
             services.AddControllers();
-            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

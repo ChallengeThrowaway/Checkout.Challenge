@@ -1,5 +1,5 @@
-﻿using PaymentGateway.Data.Entities;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using PaymentGateway.Data.Entities;
 
 namespace PaymentGateway.Data.Repositories
 {

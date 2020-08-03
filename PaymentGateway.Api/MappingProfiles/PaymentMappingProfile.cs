@@ -13,7 +13,7 @@ namespace PaymentGateway.Api.MappingProfiles
 
             CreateMap<PaymentRequest, CardDetails>();
             CreateMap<PaymentRequest, Payment>()
-                .ForMember(dest => dest.CardDetails, opt => opt.MapFrom( src => src));
+                .ForMember(dest => dest.CardDetails, opt => opt.MapFrom(src => src));
         }
     }
 }

@@ -1,14 +1,12 @@
-﻿using PaymentGateway.Core.Enums;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace PaymentGateway.Data.Entities
 {
     public class Payment
     {
-        public Payment() 
+        public Payment()
         {
             PaymentStatuses = new List<PaymentStatus>();
         }

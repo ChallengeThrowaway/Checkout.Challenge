@@ -1,4 +1,8 @@
-﻿using AutoMapper;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using AutoMapper;
 using PaymentGateway.Core.Enums;
 using PaymentGateway.Core.Models;
 using PaymentGateway.Data.Entities;
@@ -6,10 +10,6 @@ using PaymentGateway.Data.Repositories;
 using PaymentGateway.Service.Clients;
 using PaymentGateway.Service.Extensions;
 using PaymentGateway.Service.Validators;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace PaymentGateway.Service.Services
 {
@@ -53,7 +53,7 @@ namespace PaymentGateway.Service.Services
 
             payment = await _paymentRepository.Add(payment);
 
-            if (validationErrors.Any()) 
+            if (validationErrors.Any())
             {
                 return GenerateNewPaymentResponse(payment, validationErrors);
             }
@@ -63,7 +63,8 @@ namespace PaymentGateway.Service.Services
 
             if (bankResponse == null)
             {
-                payment.PaymentStatuses.Add(new PaymentStatus {
+                payment.PaymentStatuses.Add(new PaymentStatus
+                {
                     StatusKey = PaymentStatuses.SubmissionError,
                     StatusDateTime = DateTime.UtcNow
                 });
@@ -88,7 +89,7 @@ namespace PaymentGateway.Service.Services
         public async Task<PaymentDetails> GetMerchantPaymentById(Guid paymentId, Guid merchantId)
         {
             //TODO Mask card information
-            var payment =  await _paymentRepository.FindByPaymentAndMerchantId(paymentId, merchantId);
+            var payment = await _paymentRepository.FindByPaymentAndMerchantId(paymentId, merchantId);
 
             return new PaymentDetails
             {

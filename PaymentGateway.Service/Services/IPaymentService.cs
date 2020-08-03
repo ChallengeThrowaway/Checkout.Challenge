@@ -1,6 +1,6 @@
-﻿using PaymentGateway.Core.Models;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using PaymentGateway.Core.Models;
 
 namespace PaymentGateway.Service.Services
 {

@@ -1,11 +1,10 @@
 ﻿using System;
+using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PaymentGateway.Api.Models;
 using PaymentGateway.Service.Services;
-using System.Threading.Tasks;
-
 
 namespace PaymentGateway.Api.Controllers
 {

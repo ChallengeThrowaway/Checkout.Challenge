@@ -1,13 +1,13 @@
-﻿using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using PaymentGateway.Core.Configuration;
-using PaymentGateway.Core.Enums;
-using PaymentGateway.Core.Models;
-using System;
+﻿using System;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using PaymentGateway.Core.Configuration;
+using PaymentGateway.Core.Enums;
+using PaymentGateway.Core.Models;
 
 namespace PaymentGateway.Service.Clients
 {
@@ -20,7 +20,7 @@ namespace PaymentGateway.Service.Clients
         public AcquiringBankClient(
             IOptions<AcquiringBankSettings> acquiringBankSettings,
             HttpClient httpClient,
-            ILogger<AcquiringBankClient> logger) 
+            ILogger<AcquiringBankClient> logger)
         {
             _acquiringBankSettings = acquiringBankSettings.Value;
             _httpClient = httpClient;
@@ -33,7 +33,7 @@ namespace PaymentGateway.Service.Clients
 
             try
             {
-                var data =  JsonSerializer.Serialize(paymentRequest);
+                var data = JsonSerializer.Serialize(paymentRequest);
                 var content = new StringContent(data.ToString(), Encoding.UTF8, "application/json");
                 response = await _httpClient.PostAsync($"{_acquiringBankSettings.BaseUrl}/api/v1/payments", content);
             }
@@ -46,8 +46,8 @@ namespace PaymentGateway.Service.Clients
             var responseContent = await response.Content.ReadAsStringAsync();
             AcquiringBankResponse responseObject;
 
-            try 
-            { 
+            try
+            {
                 responseObject = JsonSerializer.Deserialize<AcquiringBankResponse>(responseContent);
             }
             catch (Exception ex)
@@ -80,9 +80,9 @@ namespace PaymentGateway.Service.Clients
         }
 
         //TODO: Probably a better way to do this, should investigate a different approach. This would not be pleasant to update when new statuses are added, and doesn't really belong in this class.
-        private PaymentStatuses MapStatusFromString(AcquiringBankResponse response) 
+        private PaymentStatuses MapStatusFromString(AcquiringBankResponse response)
         {
-            if (response.PaymentStatus == null) 
+            if (response.PaymentStatus == null)
             {
                 _logger.LogWarning($"Null status response from aqcuiring bank");
 

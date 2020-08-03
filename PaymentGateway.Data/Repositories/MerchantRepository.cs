@@ -1,10 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using PaymentGateway.Data.Entities;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using PaymentGateway.Data.Entities;
 
 namespace PaymentGateway.Data.Repositories
 {
@@ -12,7 +10,7 @@ namespace PaymentGateway.Data.Repositories
     {
         private readonly PaymentGatewayContext _context;
 
-        public MerchantRepository(PaymentGatewayContext context) 
+        public MerchantRepository(PaymentGatewayContext context)
         {
             _context = context;
         }

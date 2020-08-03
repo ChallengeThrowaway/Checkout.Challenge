@@ -1,6 +1,6 @@
-﻿using PaymentGateway.Core.Enums;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using PaymentGateway.Core.Enums;
 
 namespace PaymentGateway.Core.Models
 {

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
+﻿
 namespace PaymentGateway.Service.Extensions
 {
     public static class StringExtensions

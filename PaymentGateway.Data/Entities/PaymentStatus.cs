@@ -1,6 +1,6 @@
-﻿using PaymentGateway.Core.Enums;
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
+using PaymentGateway.Core.Enums;
 
 namespace PaymentGateway.Data.Entities
 {
