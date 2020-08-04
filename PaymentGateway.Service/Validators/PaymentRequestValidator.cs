@@ -32,7 +32,7 @@ namespace PaymentGateway.Service.Validators
         }
 
         // TODO: Add Luhn check to ensure valid card number
-        public string ValidateCardNumber(PaymentRequest paymentRequest)
+        private string ValidateCardNumber(PaymentRequest paymentRequest)
         {
             string strippedCardNumber = paymentRequest.CardNumber.Replace(" ", "").Replace("-", ".");
 
