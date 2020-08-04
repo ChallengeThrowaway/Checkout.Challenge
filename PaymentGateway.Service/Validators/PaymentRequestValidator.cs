@@ -36,14 +36,14 @@ namespace PaymentGateway.Service.Validators
         {
             string strippedCardNumber = paymentRequest.CardNumber.Replace(" ", "").Replace("-", ".");
 
-            return strippedCardNumber.All(c => char.IsNumber(c)) && strippedCardNumber.Length == 16 ? null : "Card number must be 16 digits long, and contain only numbers";
+            return strippedCardNumber.Length == 16 && strippedCardNumber.All(c => char.IsNumber(c)) ? null : "Card number must be 16 digits long, and contain only numbers";
         }
 
         private string ValidateCvv(PaymentRequest paymentRequest)
         {
             string strippedCvv = paymentRequest.Cvv.Replace(" ", "");
 
-            return strippedCvv.All(c => char.IsNumber(c)) && strippedCvv.Length == 3 ? null : "CVV must be 3 digits long, and only contain numbers";
+            return strippedCvv.Length == 3 && strippedCvv.All(c => char.IsNumber(c)) ? null : "CVV must be 3 digits long, and only contain numbers";
         }
 
         private string ValidateCardholderName(PaymentRequest paymentRequest)
