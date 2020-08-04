@@ -34,7 +34,7 @@ namespace PaymentGateway.Service.Validators
         // TODO: Add Luhn check to ensure valid card number
         private string ValidateCardNumber(PaymentRequest paymentRequest)
         {
-            string strippedCardNumber = paymentRequest.CardNumber.Replace(" ", "").Replace("-", ".");
+            string strippedCardNumber = paymentRequest.CardNumber.Replace(" ", "").Replace("-", "");
 
             return strippedCardNumber.Length == 16 && strippedCardNumber.All(c => char.IsNumber(c)) ? null : "Card number must be 16 digits long, and contain only numbers";
         }
@@ -48,7 +48,9 @@ namespace PaymentGateway.Service.Validators
 
         private string ValidateCardholderName(PaymentRequest paymentRequest)
         {
-            return paymentRequest.CardholderName.Replace(" ", "").All(c => char.IsLetter(c)) ? null : "Cardholder name must contain only letters";
+            var strippedCardholderName = paymentRequest.CardholderName.Replace(" ", "");
+
+            return strippedCardholderName.Length >= 3 && strippedCardholderName.All(c => char.IsLetter(c)) ? null : "Cardholder name must contain only letters";
         }
     }
 }
