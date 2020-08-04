@@ -41,7 +41,7 @@ There is also a Core  project which is once again a class library and contains s
 
 Were this to be used in a production environment, changing from the acquiring bank mock to an actual API should just be a simple case of changing the URL in the appsettings.json file (although there would likely be additional complexity with security). 
 
-This application could also be architected in a more Microserve-esque way, by having an application for the API, and an application for the service/data. This would have allowed the services to be scaled independently of the API, however since it was my first time using Docker I tried to keep things simple. Technically, having the SQL server within the docker containers is also not likely to happen in a production environment, however it should be possible to change the connection string to point at a production instance. 
+This application could also be architected in a more Microservice-esque way, by having an application for the API, and an application for the service/data. This would have allowed the services to be scaled independently of the API, however since it was my first time using Docker I tried to keep things simple. Technically, having the SQL server within the docker containers is also not likely to happen in a production environment, however it should be possible to change the connection string to point at a production instance. 
 
 # Improvements
 
